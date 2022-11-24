@@ -1,31 +1,60 @@
 import React from 'react';
-import { Button, defaultTheme, Provider } from '@adobe/react-spectrum';
+import { Flex, Button, TextField, defaultTheme, Provider } from '@adobe/react-spectrum';
 
 class Form extends React.Component {
-  constructor() {
-    super();
-    this.stage = {
+  constructor(props) {
+    super(props);
+    this.state = {
       login: '',
       password: ''
     }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+
+  handleChange(event) {
+    this.setState({ login: event });
+  }
+
+  handlePasswordChange(event) {
+    this.setState({ password: event });
+  }
+
+  handleSubmit(event) {
+    if (this.props.correctLogin == this.state.login &&
+      this.props.correctPassword == this.state.password
+      ) {
+      alert('Отправленное имя: ' + this.state.login);
+      this.setState({ login: '' });
+      this.setState({ password: '' });
+    }
+    event.preventDefault();
+  }
+
   render() {
     return <Provider theme={defaultTheme}>
       <fieldset>
-        <form>
-          <div>
-            <sp-field-label for="name-0">Name</sp-field-label>
-            <sp-textfield id="name-0" placeholder="Enter your name"></sp-textfield>
-            <label for="GET-name">Name:</label>
-            <input type="text" name="name" id="GET-name" />
-          </div>
-          <div>
-            <label for="password">Password:</label>
-            <input type="password" name="" id="password" />
-          </div>
-          <Button variant="accent">
-            Войти
-          </Button>
+        <form onSubmit={this.handleSubmit}>
+          <Flex direction="column" gap="size-100" alignItems="center">
+
+            <label> <p> Имя пользователя:</p>
+              <TextField value={this.state.login} onChange={this.handleChange}>
+              </TextField>
+            </label>
+
+            <label> <p> Пароль: </p>
+              <TextField type="password" value={this.state.password} onChange={this.handlePasswordChange}>
+              </TextField>
+            </label>
+
+            <Button type="submit " variant="primary">
+              Войти
+            </Button>
+
+          </Flex>
         </form>
       </fieldset>
     </Provider>
